@@ -1,0 +1,5 @@
+---
+- name: Enable dnf-automatic.timer
+  ansible.builtin.systemd:
+    name: dnf-automatic.timer
+    enabled: true

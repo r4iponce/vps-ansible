@@ -1,0 +1,8 @@
+---
+- name: Test role on vagrant
+  hosts: all
+  become: true
+  roles:
+    - ufw
+    - dnf
+    - sshd

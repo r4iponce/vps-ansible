@@ -1,0 +1,22 @@
+---
+- name: Upgrade all packages
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+
+- name: Install dnf-automatic
+  ansible.builtin.dnf:
+    name: dnf-automatic
+    state: latest
+
+- name: Enable update install
+  ansible.builtin.lineinfile:
+    path: /etc/dnf/automatic.conf
+    regexp: '^apply_updates'
+    line: 'apply_updates = yes'
+
+- name: Start dnf-automatic.timer
+  ansible.builtin.systemd:
+    state: started
+    name: dnf-automatic.timer
+    enabled: true

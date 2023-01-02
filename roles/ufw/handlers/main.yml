@@ -1,0 +1,10 @@
+---
+- name: Start ufw
+  ansible.builtin.systemd:
+    name: ufw
+    state: started
+
+- name: Enable ufw
+  ansible.builtin.systemd:
+    name: ufw
+    enabled: true
