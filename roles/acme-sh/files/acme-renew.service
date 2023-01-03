@@ -1,0 +1,9 @@
+[Unit]
+Description=Renew Let's Encrypt certificates using acme.sh
+After=network-online.target
+
+[Service]
+User=nginx
+Type=oneshot
+# --home's argument should be where the acme.sh script resides.
+ExecStart=/var/lib/nginx/.acme.sh/acme.sh --cron --home /var/lib/nginx/.acme.sh

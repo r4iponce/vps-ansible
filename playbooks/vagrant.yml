@@ -6,3 +6,4 @@
     - ufw
     - dnf
     - sshd
+    - acme-sh

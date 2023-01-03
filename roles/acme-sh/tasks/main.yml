@@ -1,0 +1,55 @@
+---
+- name: Install dependencies
+  ansible.builtin.dnf:
+    name: '{{ item }}'
+    state: latest
+  with_items:
+    - git
+    - nginx
+    - acl
+
+- name: Clone acme.sh repo
+  ansible.builtin.git:
+    repo: 'https://github.com/acmesh-official/acme.sh.git'
+    version: '3.0.5'
+    dest: '/tmp/acme.sh/'
+  become_user: 'nginx'
+
+- name: Install acme.sh
+  ansible.builtin.command: >-
+    ./acme.sh --install --log
+    --nocron
+    --accountemail {{ le_account_mail }}
+    --home /var/lib/nginx/.acme.sh
+  args:
+    chdir: "/tmp/acme.sh"
+    creates: "/var/lib/nginx/.acme.sh"
+  become_user: 'nginx'
+
+- name: Set letsencrypt for default CA
+  ansible.builtin.command: "./acme.sh --set-default-ca --server letsencrypt"
+  args:
+    chdir: '~/.acme.sh'
+  become_user: 'nginx'
+
+- name: Copy systemd timer and service
+  ansible.builtin.copy:
+    src: '{{ item }}'
+    dest: /etc/systemd/system
+    mode: 0640
+  with_items:
+    - acme-renew.service
+    - acme-renew.timer
+
+- name: Start acme-renew.timer
+  ansible.builtin.systemd:
+    state: started
+    name: acme-renew.timer
+    daemon_reload: yes
+    enabled: true
+
+- name: Issue certificates
+  ansible.builtin.shell: "GANDI_LIVEDNS_KEY={{ gandi_api_key }} ./acme.sh --issue -d ramle.be -d '*.ramle.be' -d '*.r4.pm' -d r4.pm --dns dns_gandi_livedns --keylength ec-384"
+  args:
+    chdir: '~/.acme.sh'
+  become_user: 'nginx'
