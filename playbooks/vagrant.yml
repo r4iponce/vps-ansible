@@ -7,3 +7,6 @@
     - dnf
     - sshd
     - acme
+    - nginx
+    - docker
+    - ramle_be

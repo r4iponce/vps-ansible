@@ -58,6 +58,12 @@
     daemon_reload: true
     enabled: true
 
+- name: Set httpd_can_network_connect flag on and keep it persistent across reboots
+  ansible.posix.seboolean:
+    name: httpd_can_network_connect
+    state: true
+    persistent: true
+
 - name: Copy main config file
   ansible.builtin.copy:
     src: 'nginx.conf'
