@@ -16,6 +16,11 @@
     - containerd.io
     - docker-compose-plugin
 
+- name: Add raiponce to docker group
+  ansible.builtin.user:
+    name: raiponce
+    group: docker
+
 - name: Start docker
   ansible.builtin.systemd:
     state: started
