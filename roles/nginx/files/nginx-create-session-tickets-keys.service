@@ -1,0 +1,13 @@
+[Unit]
+Description=Create nginx TLS session ticket keys
+Before=nginx.service
+After=etc-nginx-session_tickets_keys.mount
+
+[Service]
+Type=oneshot
+User=nginx
+ExecStart=/bin/bash -c 'openssl rand -out 1.key 80 && openssl rand -out 2.key 80 && openssl rand -out 3.key 80'
+WorkingDirectory=/etc/nginx/session_tickets_keys
+
+[Install]
+WantedBy=multi-user.target

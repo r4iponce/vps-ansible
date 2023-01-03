@@ -1,0 +1,86 @@
+---
+- name: Install dependencies
+  ansible.builtin.dnf:
+    name: '{{ item }}'
+    state: latest
+  with_items:
+    - nginx
+    - python-cryptography
+
+- name: Copy systemd unit
+  ansible.builtin.copy:
+    src: '{{ item }}'
+    dest: '/etc/systemd/system/'
+    mode: 0644
+  with_items:
+    - etc-nginx-session_tickets_keys.mount
+    - etc-nginx-session_tickets_keys.automount
+    - nginx-rotate-session-tickets-keys.service
+    - nginx-rotate-session-tickets-keys.timer
+    - nginx-create-session-tickets-keys.service
+
+- name: Create /etc/nginx/session_tickets_keys/
+  ansible.builtin.file:
+    path: '/etc/nginx/session_tickets_keys/'
+    state: 'directory'
+
+- name: Start etc-nginx-session_tickets_keys.mount
+  ansible.builtin.systemd:
+    state: started
+    name: '{{ item }}'
+    daemon_reload: true
+    enabled: true
+  with_items:
+    - etc-nginx-session_tickets_keys.mount
+    - nginx-create-session-tickets-keys.service
+    - nginx-rotate-session-tickets-keys.timer
+
+- name: Create /etc/nginx/ssl/
+  ansible.builtin.file:
+    path: '/etc/nginx/ssl/'
+    state: 'directory'
+    mode: 0700
+
+- name: Create private key for default connection
+  community.crypto.openssl_privatekey:
+    path: /etc/nginx/ssl/nginx.key
+
+- name: TLS certificate for default connection
+  community.crypto.x509_certificate:
+    path: /etc/nginx/ssl/nginx.crt
+    privatekey_path: /etc/nginx/ssl/nginx.key
+    provider: selfsigned
+
+#- name: Start nginx
+#  ansible.builtin.systemd:
+#    state: started
+#    name: nginx.service
+#    daemon_reload: true
+#    enabled: true
+
+- name: Copy main config file
+  ansible.builtin.copy:
+    src: 'nginx.conf'
+    dest: '/etc/nginx/nginx.conf'
+    mode: 0644
+  notify:
+    - reload nginx
+
+- name: Copy sites-enabled
+  ansible.builtin.copy:
+    src: '{{ item }}'
+    dest: '/etc/nginx/sites-enabled/'
+    mode: 0644
+  with_fileglob:
+    - sites-enabled/*
+  notify:
+    - reload nginx
+
+- name: Allow all access to tcp port 80 and 443
+  community.general.ufw:
+    rule: allow
+    port: '{{ item }}'
+    proto: tcp
+  with_items:
+    - 80
+    - 443

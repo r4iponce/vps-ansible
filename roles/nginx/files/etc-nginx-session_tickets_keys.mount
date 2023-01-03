@@ -1,0 +1,12 @@
+[Unit]
+Description=ramfs for nginx session ticket keys
+
+[Mount]
+What=ramfs
+Where=/etc/nginx/session_tickets_keys
+Type=ramfs
+Options=mode=0700,uid=nginx,gid=nginx,noexec
+DirectoryMode=0700
+
+[Install]
+WantedBy=multi-user.target
