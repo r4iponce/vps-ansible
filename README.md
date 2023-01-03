@@ -4,3 +4,6 @@
 - ufw for firewall
 - sshd security enforcement
 - dnf automatic upgrade
+- acme.sh for wildcard certificates
+- nginx
+- static website
