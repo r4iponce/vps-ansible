@@ -1,0 +1,23 @@
+---
+- name: Add docker repository
+  ansible.builtin.yum_repository:
+    name: Docker
+    description: Docker repo
+    baseurl: https://download.docker.com/linux/fedora/$releasever/$basearch/stable
+    gpgkey: https://download.docker.com/linux/fedora/gpg
+
+- name: Install docker
+  ansible.builtin.dnf:
+    name: '{{ item }}'
+    state: latest
+  with_items:
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
+    - docker-compose-plugin
+
+- name: Start docker
+  ansible.builtin.systemd:
+    state: started
+    name: docker
+    enabled: true
