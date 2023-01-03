@@ -51,12 +51,12 @@
     privatekey_path: /etc/nginx/ssl/nginx.key
     provider: selfsigned
 
-#- name: Start nginx
-#  ansible.builtin.systemd:
-#    state: started
-#    name: nginx.service
-#    daemon_reload: true
-#    enabled: true
+- name: Start nginx
+  ansible.builtin.systemd:
+    state: started
+    name: nginx.service
+    daemon_reload: true
+    enabled: true
 
 - name: Copy main config file
   ansible.builtin.copy:
@@ -64,7 +64,7 @@
     dest: '/etc/nginx/nginx.conf'
     mode: 0644
   notify:
-    - reload nginx
+    - Reload nginx
 
 - name: Copy sites-enabled
   ansible.builtin.copy:
@@ -74,7 +74,7 @@
   with_fileglob:
     - sites-enabled/*
   notify:
-    - reload nginx
+    - Reload nginx
 
 - name: Allow all access to tcp port 80 and 443
   community.general.ufw:

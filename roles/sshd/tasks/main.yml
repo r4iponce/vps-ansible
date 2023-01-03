@@ -4,4 +4,4 @@
     src: sshd_config
     dest: /etc/ssh/sshd_config
     mode: 0640
-  notify: restart sshd
+  notify: Restart sshd
