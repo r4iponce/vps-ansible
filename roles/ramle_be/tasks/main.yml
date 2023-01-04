@@ -11,6 +11,8 @@
     url: 'https://raw.githubusercontent.com/r4iponce/ramle.be/main/docker/docker-compose.yml'
     dest: 'ramle.be/docker-compose.yml'
     mode: 0640
+  become: false
+
 - name: Start docker compose
   ansible.builtin.command: 'docker compose up -d'
   args:
