@@ -10,3 +10,4 @@
     - nginx
     - docker
     - ramle_be
+    - timesyncd

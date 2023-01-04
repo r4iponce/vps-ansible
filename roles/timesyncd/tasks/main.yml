@@ -1,0 +1,8 @@
+---
+- name: Set timezone to Europe/Brussels
+  community.general.timezone:
+    name: Europe/Brussels
+
+- name: Enable ntp
+  ansible.builtin.command: 'timedatectl set-ntp true'
+  changed_when: false
