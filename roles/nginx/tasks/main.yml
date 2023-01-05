@@ -23,6 +23,7 @@
   ansible.builtin.file:
     path: '/etc/nginx/session_tickets_keys/'
     state: 'directory'
+    mode: 0700 # Unless (mounted by systemd-mount) but for ansible-lint
 
 - name: Start etc-nginx-session_tickets_keys.mount
   ansible.builtin.systemd:

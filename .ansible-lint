@@ -1,2 +1,9 @@
+profile: safety
+
+exclude_paths:
+  - .cache/
+  - .github/
+  - .vagrant/
+
 skip_list:
   - '403' # Package should not use latest
