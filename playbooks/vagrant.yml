@@ -3,10 +3,12 @@
   hosts: all
   become: true
   roles:
-    - ufw
+    - firewalld
+    - timesyncd
     - dnf
     - sshd
     - acme
     - nginx
     - docker
     - ramle_be
+    - fail2ban

@@ -3,11 +3,12 @@
   hosts: reverse-proxy
   become: true
   roles:
-    - ufw
     - dnf
+    - timesyncd
+    - firewalld
     - sshd
     - acme
     - nginx
     - docker
     - ramle_be
-    - timesyncd
+    - fail2ban

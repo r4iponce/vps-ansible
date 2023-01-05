@@ -83,11 +83,13 @@
   notify:
     - Reload nginx
 
-- name: Allow all access to tcp port 80 and 443
-  community.general.ufw:
-    rule: allow
+- name: Allow HTTP/HTTPS
+  ansible.posix.firewalld:
     port: '{{ item }}'
-    proto: tcp
+    permanent: yes
+    state: enabled
   with_items:
-    - 80
-    - 443
+    - 80/tcp
+    - 443/tcp
+  notify:
+    - Reload firewalld
