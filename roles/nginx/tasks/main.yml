@@ -86,7 +86,7 @@
 - name: Allow HTTP/HTTPS
   ansible.posix.firewalld:
     port: '{{ item }}'
-    permanent: yes
+    permanent: true
     state: enabled
   with_items:
     - 80/tcp
