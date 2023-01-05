@@ -1,0 +1,19 @@
+---
+- name: Install fail2ban
+  ansible.builtin.dnf:
+    name: "fail2ban"
+    state: latest
+
+- name: Copy sshd.conf
+  ansible.builtin.copy:
+    src: 'sshd.conf'
+    dest: '/etc/fail2ban/jail.d/sshd.conf'
+    mode: 0640
+  notify:
+    - Restart fail2ban
+
+- name: Start fail2ban.service
+  ansible.builtin.systemd:
+    state: started
+    name: fail2ban.service
+    enabled: true
