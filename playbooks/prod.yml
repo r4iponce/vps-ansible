@@ -7,8 +7,9 @@
     - timesyncd
     - firewalld
     - sshd
+    - fail2ban
     - acme
     - nginx
     - docker
     - ramle_be
-    - fail2ban
+    - journald

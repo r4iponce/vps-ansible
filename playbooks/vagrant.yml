@@ -12,3 +12,4 @@
     - docker
     - ramle_be
     - fail2ban
+    - journald
