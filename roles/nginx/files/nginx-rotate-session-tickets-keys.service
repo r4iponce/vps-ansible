@@ -5,4 +5,4 @@ After=nginx.service nginx-create-session-tickets-keys.service
 [Service]
 Type=oneshot
 User=nginx
-ExecStart=/bin/bash -c 'cd /etc/nginx/session_tickets_keys && mv 2.key 1.key && mv 3.key 2.key && openssl rand -out new.key 80 && mv new.key 3.key && nginx -s reload'
+ExecStart=/bin/bash -c 'cd /etc/nginx/session_tickets_keys && mv 2.key 1.key && mv 3.key 2.key && openssl rand -out new.key 80 && mv new.key 3.key && sudo /bin/systemctl reload nginx'

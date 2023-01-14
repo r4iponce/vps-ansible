@@ -7,6 +7,12 @@
     - nginx
     - python-cryptography
 
+- name: Configure sudo for reload nginx from nginx
+  ansible.builtin.copy:
+    src: '10-nginx-reload'
+    dest: '/etc/sudoers.d/'
+    mode: 0440
+
 - name: Copy systemd unit
   ansible.builtin.copy:
     src: '{{ item }}'
@@ -41,16 +47,23 @@
     path: '/etc/nginx/ssl/'
     state: 'directory'
     mode: 0700
+    owner: 'nginx'
 
 - name: Create private key for default connection
   community.crypto.openssl_privatekey:
     path: /etc/nginx/ssl/nginx.key
+    owner: 'nginx'
+  notify:
+    - Reload nginx
 
 - name: TLS certificate for default connection
   community.crypto.x509_certificate:
     path: /etc/nginx/ssl/nginx.crt
     privatekey_path: /etc/nginx/ssl/nginx.key
     provider: selfsigned
+    owner: 'nginx'
+  notify:
+    - Reload nginx
 
 - name: Start nginx
   ansible.builtin.systemd:
