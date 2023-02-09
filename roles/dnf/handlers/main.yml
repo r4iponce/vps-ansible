@@ -1,0 +1,15 @@
+---
+- name: Restart dnf-automatic
+  ansible.builtin.systemd:
+    name: dnf-automatic
+    state: restarted
+
+- name: Enable dnf-automatic
+  ansible.builtin.systemd:
+    name: dnf-automatic
+    enabled: true
+
+- name: Restart dnf-automatic
+  ansible.builtin.systemd:
+    name: dnf-automatic
+    state: started
