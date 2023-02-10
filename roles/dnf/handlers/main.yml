@@ -6,5 +6,5 @@
 
 - name: Enable dnf-automatic
   ansible.builtin.systemd:
-    name: dnf-automatic.imer
+    name: dnf-automatic.timer
     enabled: true
