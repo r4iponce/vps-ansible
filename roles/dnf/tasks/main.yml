@@ -17,13 +17,9 @@
     path: '/etc/dnf/automatic.conf'
     regexp: '^apply_updates'
     line: 'apply_updates = yes'
-  notify:
-    - Restart dnf-automatic
 
 - name: Enable automatic reboot
   ansible.builtin.lineinfile:
     dest: '/etc/dnf/automatic.conf'
     insertafter: '[commands]'
     line: 'reboot = when-needed'
-  notify:
-    - Restart dnf-automatic

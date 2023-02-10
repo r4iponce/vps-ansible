@@ -1,15 +1,10 @@
 ---
-- name: Restart dnf-automatic
+- name: Start dnf-automatic
   ansible.builtin.systemd:
-    name: dnf-automatic
-    state: restarted
+    name: dnf-automatic.timer
+    state: stared
 
 - name: Enable dnf-automatic
   ansible.builtin.systemd:
-    name: dnf-automatic
+    name: dnf-automatic.imer
     enabled: true
-
-- name: Restart dnf-automatic
-  ansible.builtin.systemd:
-    name: dnf-automatic
-    state: started
