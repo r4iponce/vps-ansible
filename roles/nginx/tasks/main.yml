@@ -13,6 +13,23 @@
     dest: '/etc/sudoers.d/'
     mode: 0440
 
+- name: Create /etc/systemd/systemd/nginx.service.d/
+  ansible.builtin.file:
+    path: '/etc/systemd/systemd/nginx.service.d/'
+    state: 'directory'
+    mode: 0750
+    owner: 'root'
+
+- name: Copy custom nginx service configuration
+  ansible.builtin.copy:
+    src: '{{ item }}'
+    dest: '/etc/systemd/systemd/nginx.service.d/'
+    mode: 0640
+  with_fileglob:
+    - nginx.service.d/*
+  notify:
+    - Restart nginx
+
 - name: Copy systemd unit
   ansible.builtin.copy:
     src: '{{ item }}'

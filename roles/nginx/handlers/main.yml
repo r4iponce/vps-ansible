@@ -8,3 +8,8 @@
   ansible.builtin.systemd:
     name: firewalld
     state: reloaded
+
+- name: Restart nginx
+  ansible.builtin.systemd:
+    name: nginx
+    state: restarted
