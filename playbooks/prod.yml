@@ -10,6 +10,5 @@
     - fail2ban
     - acme
     - nginx
-    - docker
     - ramle_be
     - journald
