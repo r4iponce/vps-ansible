@@ -7,8 +7,8 @@
     - timesyncd
     - dnf
     - sshd
-    - acme
-    - nginx
-    - ramle_be
+#    - acme
+#    - nginx
+#    - ramle_be
     - fail2ban
     - journald
