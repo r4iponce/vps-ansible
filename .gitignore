@@ -2,3 +2,4 @@ inventories
 ansible.cfg
 .vagrant
 secret.yml
+.idea
