@@ -8,7 +8,7 @@
   ansible.builtin.copy:
     src: 'sshd.conf'
     dest: '/etc/fail2ban/jail.d/sshd.conf'
-    mode: 0640
+    mode: "0640"
   notify:
     - Restart fail2ban
 

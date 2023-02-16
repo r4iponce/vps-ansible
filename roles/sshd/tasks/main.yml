@@ -1,7 +1,7 @@
 ---
 - name: Configure sshd
   ansible.builtin.copy:
-    src: sshd_config
-    dest: /etc/ssh/sshd_config
-    mode: 0640
+    src: "sshd_config"
+    dest: "/etc/ssh/sshd_config"
+    mode: "0640"
   notify: Restart sshd

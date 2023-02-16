@@ -37,7 +37,7 @@
   ansible.builtin.copy:
     src: '{{ item }}'
     dest: /etc/systemd/system
-    mode: 0640
+    mode: "0640"
   with_items:
     - acme-renew.service
     - acme-renew.timer

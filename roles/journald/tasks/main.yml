@@ -3,12 +3,12 @@
   ansible.builtin.file:
     path: '/etc/systemd/journald.conf.d'
     state: 'directory'
-    mode: 0750
+    mode: "0750"
 
 - name: Copy retention-time.conf
   ansible.builtin.copy:
     src: 'retention-time.conf'
     dest: '/etc/systemd/journald.conf.d'
-    mode: 0640
+    mode: "0640"
   notify:
     - Restart journald
