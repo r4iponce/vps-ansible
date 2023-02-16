@@ -1,0 +1,9 @@
+[Interface]
+ListenPort=52280
+PrivateKey={{ wg_private_key.stdout }}
+Address=172.42.15.1/24
+
+[Peer]
+PublicKey={{ router_wg_public_key }}
+AllowedIPs=172.42.15.2/32
+PersistentKeepalive=25

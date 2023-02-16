@@ -1,0 +1,36 @@
+---
+- name: Install wireguard-tools
+  ansible.builtin.dnf:
+    name: wireguard-tools
+    state: latest
+
+- name: Generate wireguard key
+  shell: "set -o pipefail && wg genkey | tee /etc/wireguard/private | wg pubkey | tee /etc/wireguard/public"
+  args:
+    creates: /etc/wireguard/private
+  tags:
+    - skip_ansible_lint
+
+
+- name: Register private key
+  command: cat /etc/wireguard/private
+  register: wg_private_key
+  changed_when: false
+
+- name: Copy wireguard config
+  ansible.builtin.template:
+    src: wg0.conf.j2
+    dest: /etc/wireguard/wg0.conf
+    owner: root
+    mode: "0600"
+  notify:
+    - Enable wg-quick@wg0
+    - Restart wg-quick@wg0
+
+- name: Allow wireguard
+  ansible.posix.firewalld:
+    port: "52280/udp"
+    permanent: true
+    state: enabled
+  notify:
+    - Reload firewalld

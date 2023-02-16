@@ -1,0 +1,17 @@
+---
+- name: Enable wg-quick@wg0
+  ansible.builtin.systemd:
+    name: "wg-quick@wg0"
+    daemon_reload: true
+    enabled: true
+
+- name: Restart wg-quick@wg0
+  ansible.builtin.systemd:
+    name: "wg-quick@wg0"
+    daemon_reload: true
+    state: restarted
+
+- name: Reload firewalld
+  ansible.builtin.systemd:
+    name: 'firewalld'
+    state: reloaded
