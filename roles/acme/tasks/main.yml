@@ -50,7 +50,7 @@
     enabled: true
 
 - name: Issue certificates for *.ramle.be
-  ansible.builtin.shell: "GANDI_LIVEDNS_KEY={{ gandi_api_key }} ./acme.sh --issue -d ramle.be -d '*.ramle.be' --dns dns_gandi_livedns --keylength ec-384" # yamllint disable rule:line-length
+  ansible.builtin.shell: "GANDI_LIVEDNS_KEY={{ gandi_api_key }} ./acme.sh --issue -d ramle.be -d '*.ramle.be' -d '*.r4.pm' -d r4.pm --dns dns_gandi_livedns --keylength ec-384" # yamllint disable rule:line-length
   args:
     chdir: '~/.acme.sh'
     creates: '.acme.sh/ramle.be_ecc/ramle.be.conf'
