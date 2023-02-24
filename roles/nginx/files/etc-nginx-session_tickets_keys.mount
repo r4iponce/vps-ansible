@@ -5,7 +5,7 @@ Description=ramfs for nginx session ticket keys
 What=tmpfs
 Where=/etc/nginx/session_tickets_keys
 Type=tmpfs
-Options=mode=0700,uid=nginx,gid=nginx,noexec,size=10M
+Options=mode=0700,uid=nginx,gid=nginx,noexec,size=10M,context="system_u:object_r:httpd_sys_content_t:s0"
 DirectoryMode=0700
 
 [Install]
