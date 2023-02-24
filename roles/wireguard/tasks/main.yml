@@ -11,7 +11,6 @@
   tags:
     - skip_ansible_lint
 
-
 - name: Register private key
   command: cat /etc/wireguard/private
   register: wg_private_key
