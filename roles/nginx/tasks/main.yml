@@ -49,7 +49,6 @@
   tags:
     - skip_ansible_lint
 
-
 - name: Start etc-nginx-session_tickets_keys.mount
   ansible.builtin.systemd:
     state: started
@@ -102,6 +101,32 @@
     src: 'nginx.conf'
     dest: '/etc/nginx/nginx.conf'
     mode: "0644"
+  notify:
+    - Reload nginx
+
+- name: Create /var/www/cache
+  ansible.builtin.file:
+    path: '/var/www/cache'
+    state: 'directory'
+    mode: "0750"
+    owner: 'nginx'
+
+- name: Allow nginx to read and write /var/www/cache
+  community.general.sefcontext:
+    target: '/var/www/cache(/.*)?'
+    setype: httpd_sys_rw_content_t
+    state: present
+
+- name: Apply new SELinux file context to filesystem
+  ansible.builtin.command: 'restorecon -irv /var/www/cache'
+
+- name: Copy conf.d
+  ansible.builtin.copy:
+    src: '{{ item }}'
+    dest: '/etc/nginx/conf.d/'
+    mode: "0644"
+  with_fileglob:
+    - conf.d/*
   notify:
     - Reload nginx
 
