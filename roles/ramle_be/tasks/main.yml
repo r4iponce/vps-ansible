@@ -1,21 +1,55 @@
 ---
+- name: Create perso_web_deploy user
+  ansible.builtin.user:
+    name: 'perso_web_deploy'
+    groups: 'nginx'
+    home: '/home/perso_web_deploy'
+
 - name: Create directory
   ansible.builtin.file:
-    path: 'ramle.be/'
+    path: '/var/www/ramle.be/'
     state: 'directory'
-    mode: "0750"
-  become: false
+    mode: 0750
+    owner: 'perso_web_deploy'
+    group: 'nginx'
 
-- name: Download docker-compose.yml
-  ansible.builtin.get_url:
-    url: 'https://raw.githubusercontent.com/r4iponce/ramle.be/main/docker/docker-compose.yml'
-    dest: 'ramle.be/docker-compose.yml'
-    mode: "0640"
-  become: false
+- name: Create /home/perso_web_deploy/.ssh/
+  ansible.builtin.file:
+    path: '/home/perso_web_deploy/.ssh/'
+    state: directory
+    mode: '0700'
+    owner: 'perso_web_deploy'
+    group: 'perso_web_deploy'
 
-- name: Start docker compose
-  ansible.builtin.command: 'docker compose up -d'
-  args:
-    chdir: "ramle.be"
-  become: false
-  changed_when: false
+- name: Add authorized_keys
+  ansible.builtin.copy:
+    src: 'authorized_keys'
+    dest: '/home/perso_web_deploy/.ssh/authorized_keys'
+    owner: 'perso_web_deploy'
+    group: 'perso_web_deploy'
+    mode: '0700'
+
+- name: Only allow sftp for perso_web_deploy
+  ansible.builtin.copy:
+    src: '40-perso_web_deploy.conf'
+    dest: '/etc/ssh/sshd_config.d/40-perso_web_deploy.conf'
+    mode: '0750'
+  notify:
+    - Reload sshd
+
+- name: Create /var/www/ramle.be
+  ansible.builtin.file:
+    path: "/var/www/ramle.be"
+    state: directory
+    mode: '0755'
+    owner: 'perso_web_deploy'
+    group: 'nginx'
+
+- name: Allow nginx to read /var/www/ramle.be
+  community.general.sefcontext:
+    target: '/var/www/ramle.be(/.*)?'
+    setype: httpd_sys_content_t
+    state: present
+
+- name: Apply new SELinux file context to filesystem
+  ansible.builtin.command: 'restorecon -irv /var/www/ramle.be'
