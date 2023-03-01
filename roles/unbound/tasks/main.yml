@@ -1,0 +1,36 @@
+---
+- name: Install unbound
+  ansible.builtin.dnf:
+    name: '{{ item }}'
+    state: latest
+  with_items:
+    - unbound
+    - python-cryptography
+  notify:
+    - Enable unbound
+    - Restart unbound
+
+- name: Create private key for DoH
+  community.crypto.openssl_privatekey:
+    path: /etc/unbound/key.pem
+    owner: 'unbound'
+  notify:
+    - Reload unbound
+
+- name: TLS certificate for DoH
+  community.crypto.x509_certificate:
+    path: /etc/unbound/cert.pem
+    privatekey_path: /etc/unbound/key.pem
+    provider: selfsigned
+    owner: 'unbound'
+  notify:
+    - Reload unbound
+
+- name: Configure unbound
+  ansible.builtin.copy:
+    src: 'unbound.conf'
+    dest: '/etc/unbound/unbound.conf'
+    mode: "0440"
+    owner: "unbound"
+  notify:
+    - Reload unbound
