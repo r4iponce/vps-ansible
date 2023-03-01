@@ -6,6 +6,7 @@
   with_items:
     - nginx
     - python-cryptography
+    - nginx-mod-stream
 
 - name: Configure sudo for reload nginx from nginx
   ansible.builtin.copy:
@@ -140,7 +141,7 @@
   notify:
     - Reload nginx
 
-- name: Allow HTTP/HTTPS
+- name: Allow HTTP/HTTPS and DoT
   ansible.posix.firewalld:
     port: '{{ item }}'
     permanent: true
@@ -148,5 +149,6 @@
   with_items:
     - 80/tcp
     - 443/tcp
+    - 853/tcp
   notify:
     - Reload firewalld
